@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Feedback Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Student Feedback Form</h2>
+    <form id="feedbackForm">
+      <input type="text" name="student_name" placeholder="Your Name" required>
+      <input type="email" name="student_email" placeholder="Your Email" required>
+      <input type="text" name="student_phone" placeholder="Your Phone (Optional)">
+      <textarea name="content" placeholder="Your Feedback" rows="5" required></textarea>
+      <button type="submit">Submit Feedback</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      fetch("submit_feedback.php", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("result").textContent = data.message;
+          document.getElementById("result").style.color = data.success ? "green" : "red";
+          if (data.success) this.reset();
+        })
+        .catch(err => {
+          document.getElementById("result").textContent = "⚠️ Error submitting feedback.";
+          document.getElementById("result").style.color = "red";
+        });
+    });
+  </script>
+</body>
+</html>
